@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+   <head>
+      <meta charset="UTF-8" />
+      <title>Product List</title>
+      <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+   </head>
+   <body>
+   <div xmlns:th="http://www.thymeleaf.org"
+     style="border: 1px solid #ccc;padding:5px;margin-bottom:20px;">
+ 
+    <a th:href="@{/products}">Product List</a>
+  
+     | &nbsp;
+  <a th:href="@{/orderlist}">Order List</a>
+  
+     | &nbsp;
+   <a th:href="@{/orders}">Billing</a>
+    
+     | &nbsp;
+      
+   <a th:if="${#request.userPrincipal != null}" th:href="@{/logout}">Logout</a>
+  
+</div>
+   <h3>Add Product</h3>
+       
+      <form  id="addProduct" th:action="@{/addProduct}"
+         th:object="${product}" method="POST">
+         
+         <div class="table-responsive">
+		<table class="table table-bordered" style="width: 300px">
+			<tr>
+				<td>Product Id :</td>
+				<td><input type="text" th:field="*{id}"/></td>
+			</tr>
+			<tr>
+				<td>Product Name :</td>
+				<td><input type="text" th:field="*{name}" /></td>
+			</tr>
+			<tr>
+				<td>Available Quantity :</td>
+				<td><input type="text" th:field="*{qty}"/></td>
+			</tr>
+			<tr>
+				<td>Unit Price :</td>
+				<td><input type="text" th:field="*{price}" /></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><input class="btn btn-primary btn-sm" type="submit" value="Add" /></td>
+			</tr>
+		</table>
+		</div>
+
+      </form>
+      <br><br>
+      <h3>Product Details</h3>
+      <div>
+         <table border="1">
+            <tr>
+              	<th>Product Id</th>
+				<th>Product Name</th>
+				<th>Quantity</th>
+				<th>Price</th>
+				<th>Edit/Delete</th>
+            </tr>
+            <tr th:each ="product : ${products}">
+               <td width="60" align="center" th:utext="${product.id}">...</td>
+               <td width="60" align="center" th:utext="${product.name}">...</td>
+               <td width="60" align="center" th:utext="${product.qty}">...</td>
+               <td width="60" align="center" th:utext="${product.price}">...</td>
+               <td width="60" align="center"><a th:href="@{'/edit/' + ${product.id}}">
+               Edit</a>/<a th:href="@{'/delete/' + ${product.id}}">Delete</a></td>
+            </tr>
+         </table>
+      </div>
+   </body>
+  
+</html>

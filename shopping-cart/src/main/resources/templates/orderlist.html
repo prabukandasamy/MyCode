@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+   <head>
+      <meta charset="UTF-8" />
+      <title>Order List</title>
+      <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+   </head>
+   <body>
+   <div xmlns:th="http://www.thymeleaf.org"
+     style="border: 1px solid #ccc;padding:5px;margin-bottom:20px;">
+ 
+    <a th:href="@{/products}">Product List</a>
+  
+     | &nbsp;
+  <a th:href="@{/orderlist}">Order List</a>
+  
+     | &nbsp;
+   <a th:href="@{/orders}">Billing</a>
+    
+     | &nbsp;
+      
+   <a th:if="${#request.userPrincipal != null}" th:href="@{/logout}">Logout</a>
+  
+</div>
+   <h3>Search Order</h3>
+       
+      <form  id="orderlistform" th:action="@{/orderlist}" th:object="${order}" method="POST">
+         
+         <div>
+		<table >
+			<tr>
+			<td>Order Number&nbsp;&nbsp;&nbsp;&nbsp;</td>
+				<td>
+				<input type="text" th:field="*{orderid}" placeholder="Enter order number">
+				<button onclick="orderList()"><i class="fa fa-search"></i></button></td>
+			</tr>
+			
+		</table>
+		</div>
+
+      </form>
+      <br><br>
+      <h3>Order List</h3>
+      <div>
+         <table border="1">
+            <tr>
+              	<th>Order Number</th>
+				<th>Purchase Date</th>
+				<th>No. of Items</th>
+				<th>Amount</th>
+            </tr>
+            <tr th:each ="ol : ${orderList}">
+               <td width="60" align="center"> <a th:href="@{'/orders/' + ${ol.orderid}}" th:text=${ol.orderid}></a></td>
+               <td width="60" align="center" th:utext="${ol.purchaseDate}">...</td>
+               <td width="60" align="center" th:utext="${ol.qty}">...</td>
+               <td width="60" align="center" th:utext="${ol.pricetotal}">...</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+  <script type="text/javascript">
+  function orderList(){
+  var idObj = document.getElementById('orderid');
+  var idValue = idObj.value;
+  document.getElementById('orderlistform').action = "/orderlist/"+idValue;
+  document.getElementById('orderlistform').submit();
+  }
+  </script>
+</html>

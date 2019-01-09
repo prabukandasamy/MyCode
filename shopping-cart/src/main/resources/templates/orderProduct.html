@@ -1,0 +1,129 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+   <head>
+      <meta charset="UTF-8" />
+      <title>Order List</title>
+      <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+   </head>
+   <body>
+   <div xmlns:th="http://www.thymeleaf.org"
+     style="border: 1px solid #ccc;padding:5px;margin-bottom:20px;">
+ 
+    <a th:href="@{/products}">Product List</a>
+  
+     | &nbsp;
+  <a th:href="@{/orderlist}">Order List</a>
+  
+     | &nbsp;
+   <a th:href="@{/orders}">Billing</a>
+    
+     | &nbsp;
+      
+   <a th:if="${#request.userPrincipal != null}" th:href="@{/logout}">Logout</a>
+  
+</div>
+   <h3>Billing System</h3>
+       
+      <form  id="orderProduct" th:action="@{/orderProduct}"
+         th:object="${order}" method="POST">
+         <div class="table-responsive">
+		<table class="table table-bordered" style="width: 300px">
+			<tr>
+				<td>Order Id :</td>
+				<td><input type="text" id="orderid" th:field="*{orderid}" readonly="readonly"/></td>
+			</tr>
+			<tr>
+				<td>Product Id :</td>
+				<td><input type="text" id="id" th:field="*{id}" onchange="calFun()"/></td>
+			</tr>
+			<tr>
+				<td>Product Name :</td>
+				<td><input type="text" th:field="*{name}" readonly="readonly"/></td>
+			</tr>
+			<tr>
+				<td>Quantity :</td>
+				<td><input type="text" id="qty" th:field="*{qty}" onchange="calTotal()"/></td>
+			</tr>
+
+			<tr>
+				<td>Unit Price :</td>
+				<td><input type="text" id="price" th:field="*{price}" readonly="readonly"/></td>
+			</tr>
+			<tr>
+				<td>Price :</td>
+				<td><input type="text" id="pricetotal" th:field="*{pricetotal}" readonly="readonly"/></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><input class="btn btn-primary btn-sm" type="submit" value="Add" /></td>
+			</tr>
+		</table>
+		</div>
+
+      </form>
+      <br><br>
+      <h3>Product List</h3>
+      <div>
+         <table border="1">
+            <tr>
+              	<th>Product Id</th>
+				<th>Product Name</th>
+				<th>Quantity</th>
+				<th>Unit Price</th>
+				<th>Price</th>
+				<th>Edit/Delete</th>
+            </tr>
+            <tr th:each ="order : ${orders}">
+               <td width="60" align="center" th:utext="${order.id}">...</td>
+               <td width="60" align="center" th:utext="${order.name}">...</td>
+               <td width="60" align="center" th:utext="${order.qty}">...</td>
+               <td width="60" align="center" th:utext="${order.price}">...</td>
+               <td width="60" align="center" th:utext="${order.pricetotal}">...</td>
+               <td width="60" align="center"><a th:href="@{'/editorder/' + ${order.orderid}+'/'+${order.id}}">
+               Edit</a>/<a th:href="@{'/deleteorder/' + ${order.orderid}+'/'+${order.id}}">Delete</a></td>
+            </tr>
+            
+            <tr>
+               <td width="60" align="center" ></td>
+               <td width="60" align="center" ></td>
+               <td width="60" align="center" ></td>
+               <td width="60" align="center" >Total</td>
+               <td width="60" align="center" ><p th:text="${payAmount}">[...]</p></td>
+               <td width="60" align="center"><input type="button" class="btn btn-primary btn-sm" value="Pay" onclick="payBill()"/></td>
+            </tr>
+            
+         </table>
+      </div>
+      
+   </body>
+   
+   <script type="text/javascript">
+   
+   function calFun(){
+	   var idVal = document.getElementById('id');
+	   var strVal = idVal.value;
+	   document.getElementById('orderProduct').action = "/populateorder/"+strVal;
+	   document.getElementById('orderProduct').submit();
+   }
+   
+   function calTotal(){
+	   var qty = document.getElementById('qty');
+	   var price = document.getElementById('price');
+	   var totalPrice = qty.value * price.value;
+	   document.getElementById('pricetotal').value=totalPrice;
+   }
+   
+   function fetchOrder(){
+	   var idVal = document.getElementById('orderid');
+	   var strVal = idVal.value;
+	   document.getElementById('orderProduct').action = "/orders/"+strVal;
+	   document.getElementById('orderProduct').submit();
+   }
+   
+   function payBill(){
+	   document.getElementById('orderProduct').action = "/paybill";
+	   document.getElementById('orderProduct').submit();
+   }
+   
+   </script>
+</html>
